@@ -58,9 +58,12 @@ Scoper works in two ways.
 
 Shell usage
 ```python
->>> obj = scoper()
->>> obj.main("Apple Watch", 'https://www.youtube.com/watch?v=wFTmQ27S7OQ', mode = 'FUZZY', limit = 10) 
-[('Apple Watch.', 1796.994), ('the iPad to the Apple watch, and', 318.617), ('Apple Watch has grown ... ]
+>>> obj = Scoper()
+>>> obj.main('https://www.youtube.com/watch?v=wFTmQ27S7OQ', mode = 'FUZZY', limit = 10)
+Enter query string: Apple Watch
+
+[('Apple Watch.', 1796.994), ('the iPad to the Apple watch, and', 318.617), ('Apple Watch has grown in such a', 480.379), ... ]
+
 ```
 
 CLI usage
