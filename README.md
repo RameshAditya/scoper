@@ -78,6 +78,22 @@ tap.                                 59m 52s
 so now with photoshop, project       1h 10m 41s
 products, every ipad pro is made     1h 15m 41s
 previous air.                        18m 13s
+
+
+C:\Users\Aditya\Desktop\audiosearch>python -W ignore scoper.py --video https://www.youtube.com/watch?v=bfHEnw6Rm-4 --mode SEMANTIC --limit 10 --language en
+Enter query string: i can't wait to introduce you
+
+i am thrilled to be able to tell     46m 43s
+you're going to be amazed by         1h 19m 18s
+powered by the all-new a12x          51m 26s
+but since this is an x chip, it      51m 51s
+in fact, this new a12x has more      51m 55s
+i can't wait for you to get your     25m 32s
+just like in the x-r, we call it     47m 15s
+the a12x bionic has an all-new       53m 1s
+a few days ago and they're live      40m 31s
+and all of the new features of       21m 47s
+
 ```
 
 ---------------------------------------------------------------------------------------------------------
