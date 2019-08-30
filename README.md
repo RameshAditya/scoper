@@ -83,7 +83,7 @@ products, every ipad pro is made     1h 15m 41s
 previous air.                        18m 13s
 
 
-C:\Users\Aditya\Desktop\audiosearch>python -W ignore scoper.py --video https://www.youtube.com/watch?v=bfHEnw6Rm-4 --mode SEMANTIC --limit 10 --language en
+> python -W ignore scoper.py --video https://www.youtube.com/watch?v=bfHEnw6Rm-4 --mode SEMANTIC --limit 10 --language en
 Enter query string: i can't wait to introduce you
 
 i am thrilled to be able to tell     46m 43s
