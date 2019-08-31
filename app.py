@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request
 from scoper import Scoper
+import nltk
+
+nltk.download("brown")
 
 app = Flask(__name__)
 
