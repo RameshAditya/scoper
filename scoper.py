@@ -302,7 +302,7 @@ class Scoper:
         return marked_timestamps
 
 
-    def main(self, youtube_video_url, limit=5, languages=None, mode='FUZZY'):
+    def main(self, youtube_video_url, query, limit=5, languages=None, mode='FUZZY'):
         """
         The driving code of this script, this invokes all other methods as it deeems fit.
 
@@ -313,10 +313,7 @@ class Scoper:
         @param mode:               Whether the search is fuzzy or semantic
 
         """
-        if languages is None:
-            languages = ['en']
 
-        query = input('Enter query string: ')
         query = query.lower()
         captions_and_timestamps = get_youtube_captions(youtube_video_url, languages)
 
@@ -334,7 +331,8 @@ class Scoper:
         for timestamp in timestamps:
             captions_extracted.append(timestamps_and_captions[timestamp])
 
-        pretty_print(list(zip(captions_extracted, normalize_time(timestamps))))
+        # pretty_print(list(zip(captions_extracted, normalize_time(timestamps))))
+        return list(zip(captions_extracted, normalize_time(timestamps)))
 
 
 if __name__ == "__main__":
@@ -368,5 +366,7 @@ if __name__ == "__main__":
     else:
         LIMIT = int(ARGS.limit[0])
 
+    query = input('Enter query string: ')
+
     FINDER = Scoper()
-    FINDER.main(VIDEO, limit=LIMIT, languages=LANGUAGE, mode=MODE)
+    FINDER.main(VIDEO, query=query, limit=LIMIT, languages=LANGUAGE, mode=MODE)
