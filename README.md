@@ -66,6 +66,12 @@ Enter query string: Apple Watch
 
 ```
 
+Web GUI usage
+```
+python app.py
+
+```
+
 CLI usage
 ```
 > python -W ignore scoper.py --video https://www.youtube.com/watch?v=bfHEnw6Rm-4 --mode FUZZY --limit 10 --language en
