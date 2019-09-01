@@ -331,7 +331,7 @@ class Scoper:
         for timestamp in timestamps:
             captions_extracted.append(timestamps_and_captions[timestamp])
 
-        # pretty_print(list(zip(captions_extracted, normalize_time(timestamps))))
+        pretty_print(list(zip(captions_extracted, normalize_time(timestamps))))
         return list(zip(captions_extracted, normalize_time(timestamps)))
 
 

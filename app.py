@@ -29,7 +29,6 @@ def index():
         results = FINDER.main(youtube_link, query=query, limit=5, languages=["en"], mode=algorithm)
 
         # converting results from [('apple watch.', '29m 56s')] to [['apple watch.', '29m56s']]
-        print("results before", results)
         results = [[x[0],x[1].replace(" ","")] for x in results]
         
         print(results)

@@ -19,6 +19,7 @@
 </head>
 
 <body>
+    <!-- *******************NAVBAR START********************** -->
     <nav>
         <div class="nav-wrapper">
             <a href="/" class="brand-logo" style="margin-left: 4rem;">Scoper</a>
@@ -27,8 +28,10 @@
             </ul>
         </div>
     </nav>
+    <!-- *******************NAVBAR  END*********************************** -->
 
     <div class="container">
+        <!-- ***********RESULTS AFTER FORM SUBMISSION START*************** -->
         {% if results and videolink %}
         <div>
             <!-- <p>{{videolink}}</p> -->
@@ -54,7 +57,11 @@
             </table>
 
         </div>
-        {% endif %} {% if empty %}
+        {% endif %}
+        <!-- ***********RESULTS AFTER FORM SUBMISSION END*************** -->
+
+        <!-- ***********FORM START************************************** -->
+        {% if empty %}
         <div class="row">
             <div class="col m7" style="margin-left: 15rem;">
                 <div class="card">
@@ -108,22 +115,17 @@
                             </form>
                         </div>
                     </div>
-                    <!-- <div class="card-action">
-                        <a href="#">This is a link</a>
-                    </div> -->
                 </div>
             </div>
         </div>
         {% endif %}
+        <!-- ***********FORM END************************************** -->
     </div>
     <script>
         function playNow(videolink, time) {
-
-            console.log(time)
-                // converting time to seconds
+            // converting time to seconds
             time = time.replace(/[^\d.-]/g, ',');
-            time = time.split(",")
-            console.log(time, time.length);
+            time = time.split(",");
             if (time.length == 4) {
                 time = parseInt(time[0]) * 60 * 60 + parseInt(time[1]) * 60 + parseInt(time[2]);
             } else {
@@ -136,7 +138,7 @@
             console.log(videolink);
             videoElm = document.getElementById("video");
             videoElm.style.disply = ""
-            videoElm.src = videolink;
+            videoElm.src = videolink;;
         }
     </script>
 
