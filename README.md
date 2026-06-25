@@ -51,6 +51,12 @@ Scoper works in two ways.
     - The performance of semantic searching is highly dependent on the dataset on which the Word2Vec model used is trained on.
     - By default, the Brown's corpus is used to train the Word2Vec model, and additionally a modified word-mover's distance algorithm is used to evaluate sentence-sentence similarity.
     - For non-english language querying, the user will have to provide their own dataset.
+
+  - Marengo searching (TwelveLabs)
+    - Scoper can also rank captions using [TwelveLabs'](https://twelvelabs.io) Marengo multimodal embedding model.
+    - Both the query and each caption are embedded into a shared 512-dimensional space and ranked by cosine similarity.
+    - Unlike the Word2Vec `SEMANTIC` mode, Marengo is not limited to the Brown corpus vocabulary, so it handles out-of-vocabulary words, phrasing and intent much better, with no model to train.
+    - This mode is **opt-in** (`--mode MARENGO`). It needs the `twelvelabs` package (`pip install twelvelabs`) and a `TWELVELABS_API_KEY` environment variable. You can grab a free API key at [twelvelabs.io](https://twelvelabs.io) — there's a generous free tier.
 - Map back the chosen captions to the original timestamps and return them
 
 ---------------------------------------------------------------------------------------------------------
@@ -102,6 +108,11 @@ just like in the x-r, we call it     47m 15s
 the a12x bionic has an all-new       53m 1s
 a few days ago and they're live      40m 31s
 and all of the new features of       21m 47s
+
+
+> export TWELVELABS_API_KEY=<your-key>   # grab a free key at https://twelvelabs.io
+> python -W ignore scoper.py --video https://www.youtube.com/watch?v=bfHEnw6Rm-4 --mode MARENGO --limit 10 --language en
+Enter query string: project aero augmented reality
 
 ```
 
