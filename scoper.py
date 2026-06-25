@@ -174,6 +174,12 @@ class Scoper:
         """
         self._fuzzy_ = "FUZZY"
         self._semantic_ = "SEMANTIC"
+        self._marengo_ = "MARENGO"
+
+        # Cache for the TwelveLabs client and per-query text embeddings,
+        # only created when the MARENGO mode is actually used.
+        self._tl_client_ = None
+        self._marengo_model_ = "marengo3.0"
 
         _m_, _v_ = setup(pretrained_vectors=pretrained_vectors,
                          small_dataset=small_dataset)
@@ -225,6 +231,80 @@ class Scoper:
             closest_captions.append(corpus[idx])
 
         return closest_captions
+
+
+    def _get_marengo_embedding(self, text):
+        """
+        Fetch a 512-dimensional TwelveLabs Marengo text embedding for a
+        single string.
+
+        The TwelveLabs client is created lazily on first use so that the
+        `twelvelabs` package and an API key are only required when the
+        MARENGO mode is actually selected. The key is read from the
+        TWELVELABS_API_KEY environment variable.
+
+        @param text: The string to embed.
+
+        """
+        if self._tl_client_ is None:
+            import os
+            from twelvelabs import TwelveLabs
+
+            api_key = os.environ.get("TWELVELABS_API_KEY")
+            if not api_key:
+                raise RuntimeError(
+                    "MARENGO mode needs a TwelveLabs API key. Set the "
+                    "TWELVELABS_API_KEY environment variable (grab a free "
+                    "key at https://twelvelabs.io)."
+                )
+            self._tl_client_ = TwelveLabs(api_key=api_key)
+
+        response = self._tl_client_.embed.create(
+            model_name=self._marengo_model_,
+            text=text,
+        )
+        return response.text_embedding.segments[0].float_
+
+
+    def get_captions_by_marengo_similarity(self, query, corpus, limit=5):
+        """
+        Method that uses TwelveLabs' Marengo multimodal embeddings to rank
+        captions by semantic similarity to the query.
+
+        Unlike the Word2Vec based SEMANTIC mode (which is limited to the
+        English Brown corpus vocabulary), Marengo embeds the full query and
+        each caption into a shared 512-dimensional space, so it handles
+        out-of-vocabulary words, phrasing and intent far better. Captions are
+        ranked by cosine similarity of their embeddings to the query's.
+
+        @param query:      The user query
+        @param corpus:     The corpus or set of captions
+        @param limit:      The number of most similar captions to be returned
+
+        """
+        corpus = list(corpus)
+        if not corpus:
+            return []
+
+        query_vec = self._get_marengo_embedding(query)
+
+        def cosine(a, b):
+            dot = sum(x * y for x, y in zip(a, b))
+            norm_a = sum(x * x for x in a) ** 0.5
+            norm_b = sum(y * y for y in b) ** 0.5
+            if norm_a == 0 or norm_b == 0:
+                return 0.0
+            return dot / (norm_a * norm_b)
+
+        scored = []
+        for caption in corpus:
+            caption_vec = self._get_marengo_embedding(caption)
+            scored.append((cosine(query_vec, caption_vec), caption))
+
+        # Higher cosine similarity == more relevant.
+        scored.sort(key=lambda pair: pair[0], reverse=True)
+
+        return [caption for _, caption in scored[:limit]]
 
 
     def compute_semantic_similarity(self, sentence_1, sentence_2):
@@ -296,6 +376,12 @@ class Scoper:
                                                  caption_to_timestamp.keys(),
                                                  limit=limit)
 
+        elif mode == self._marengo_:
+            get_captions = self.get_captions_by_marengo_similarity
+            most_similar_captions = get_captions(query,
+                                                 caption_to_timestamp.keys(),
+                                                 limit=limit)
+
         marked_timestamps = [caption_to_timestamp[caption] for caption \
                             in most_similar_captions]
 
@@ -340,7 +426,7 @@ if __name__ == "__main__":
 
     PARSER.add_argument('--video', action='append')
     PARSER.add_argument('--mode', action='append',
-                        choices=['FUZZY', 'SEMANTIC', 'F', 'S'])
+                        choices=['FUZZY', 'SEMANTIC', 'MARENGO', 'F', 'S', 'M'])
     PARSER.add_argument('--limit', action='append')
     PARSER.add_argument('--language', action='append')
     ARGS = PARSER.parse_args()
